@@ -26,9 +26,11 @@ require("ggmap")        # Plotting of maps same as you would with ggplot2
 require("maptools")     # Read, write, and handle Shapefiles in R
 require("mapdata")      # Supplement to maps package
 
+## Read comma delimitated dataset
 stream <- read.csv("CBC_Stream_all.csv")
 ## View to confirm proper read
 #View(CBC_Stream_all.csv)
+
 ## Set date time fomat
 stream$date <- as.POSIXct(stream$date, format = "%m/%d/%y %H:%M", tz = "est")
 ## Confirm
@@ -36,8 +38,7 @@ class(stream[,1])
 ##View
 #View(stream)
 
-
-### rename columns
+## rename columns
 colnames(stream) <- c("Date", 
                       "Temp", 
                       "Depth")
@@ -46,9 +47,14 @@ stream.1 <- mutate(stream,
                    Temp = (Temp - 32)/1.8, 
                    Depth = (Depth * 30.48))
 
-########### subset to reduce data collection
-stream.2 <- subset(stream.1, Date != as.POSIXct("2017-09-08") & Date <= as.POSIXct("2017-10-25 13:00") | Date >= as.POSIXct("2017-10-25 19:00") & Date <= as.POSIXct("2017-11-22 3:00"))
-### plot
+########### subset dataset to remove periods of data collection
+###### erronious increases in temperature 
+stream.2 <- subset(stream.1, Date != as.POSIXct("2017-09-08") &
+                     Date <= as.POSIXct("2017-10-25 13:00") | 
+                     Date >= as.POSIXct("2017-10-25 19:00") & 
+                     Date <= as.POSIXct("2017-11-22 3:00"))
+
+### plot stream temperature and depth with 2 axis
 ggplot(data = stream.2, aes(x = Date))+
   ggtitle("Brittain Creek")+
   geom_line(aes(y = Temp, colour = "Temperature (°C)"), size = 1.1)+
