@@ -85,7 +85,7 @@ stream.3 <- (stream.2) %>%
   select(Temp) %>%
   mutate(Temp = sort(Temp, decreasing = TRUE, na.last = TRUE),
          T.rank = rank(desc(Temp)),
-         Temp = signif(Temp, digits = 3))
+         Temp = signif(Temp, digits = 2))
 ## View(stream.3)
 
 ## Add counter to data fram for in temp obersvations 
@@ -95,12 +95,12 @@ stream.3 <- stream.3 %>%
   mutate(count = length(Temp))
 ##View(stream.3)
 
-## Calculate duration (hrs) of temp observations
+## Calculate duration (at temperature hrs) of temp observations
 ## 1 observation = 2-min duration
 stream.3 <- stream.3 %>%
   group_by(count) %>%
   mutate(time = mean(count)*2/60,  ## Conversion to hours
-         time = signif(time, digits = 2))
+         time = signif(time, digits = 3))
 ## View(stream.3)
 
 ## Select temp and duration variables
@@ -114,9 +114,14 @@ stream.temp <- (stream.3) %>%
 stream.temp <- distinct(stream.temp)
 #View(stream.temp)
 
+## Sum time to create cummulative duration exceedance of observation temperature
+stream.temp <- (stream.temp) %>%
+  mutate(cumdur = cumsum(time))
+## View(stream.temp)
+
 ## Plot Brittain Creek Temperature-Durations
 ggplot()+
-  geom_point(data = stream.temp, aes(x = time, y = Temp, shape = "Stream Temperature"))+ 
+  geom_point(data = stream.temp, aes(x = cumdur, y = Temp, shape = "Stream Temperature"))+ 
   ggtitle("Brittain Creek Temperature-Duration Plot")+
   theme(plot.title = element_text(hjust = 0.5))+
   theme(legend.position = "bottom", 
