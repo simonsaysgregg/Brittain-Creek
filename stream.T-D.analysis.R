@@ -76,5 +76,54 @@ ggplot(data = stream.2, aes(x = Date))+
         axis.text = element_text(size = 14))
 
 
+## Create temperature-duration plot
+## Entire monitoring period 
+## excluding data collection times
+## Use stream.2
+## Select temperature variable: sort, rank, & round
+stream.3 <- (stream.2) %>%
+  select(Temp) %>%
+  mutate(Temp = sort(Temp, decreasing = TRUE, na.last = TRUE),
+         T.rank = rank(desc(Temp)),
+         Temp = signif(Temp, digits = 3))
+## View(stream.3)
+
+## Add counter to data fram for in temp obersvations 
+## grouped_by temperature
+stream.3 <- stream.3 %>%
+  group_by(Temp) %>%
+  mutate(count = length(Temp))
+##View(stream.3)
+
+## Calculate duration (hrs) of temp observations
+## 1 observation = 2-min duration
+stream.3 <- stream.3 %>%
+  group_by(count) %>%
+  mutate(time = mean(count)*2/60,  ## Conversion to hours
+         time = signif(time, digits = 2))
+## View(stream.3)
+
+## Select temp and duration variables
+stream.temp <- (stream.3) %>%
+  ungroup() %>%
+  select("Temp", "time")
+#View(stream.temp)
+
+## Gather distict observations
+## Should result in a single value per temperature
+stream.temp <- distinct(stream.temp)
+#View(stream.temp)
+
+## Plot Brittain Creek Temperature-Durations
+ggplot()+
+  geom_point(data = stream.temp, aes(x = time, y = Temp, shape = "Stream Temperature"))+ 
+  ggtitle("Brittain Creek Temperature-Duration Plot")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  theme(legend.position = "bottom", 
+        legend.title = element_blank())+
+  scale_y_continuous(limits = c(5,35), 
+                     expand = c(0,0)) +
+  labs(x = "Duration (hrs)", y = "Temperature (°C)")
+
 
 
