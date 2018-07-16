@@ -27,7 +27,7 @@ require("maptools")     # Read, write, and handle Shapefiles in R
 require("mapdata")      # Supplement to maps package
 
 ## Read comma delimitated dataset
-stream <- read.csv("CBC_Stream_all.csv")
+stream <- read.csv("./Working/CBC_Stream_all.csv")
 ## View to confirm proper read
 #View(CBC_Stream_all.csv)
 
