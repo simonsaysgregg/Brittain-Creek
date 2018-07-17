@@ -58,6 +58,8 @@ stream.1 <- mutate(stream,
 ########### subset dataset to remove periods of data collection
 ###### erronious increases in temperature 
 stream.2 <- subset(stream.1, date != as.POSIXct("2017-09-08") &
+                     date <= as.POSIXct("2017-10-23 16:40") | 
+                     date >= as.POSIXct("2017-10-25 14:00") & 
                      date <= as.POSIXct("2017-10-25 13:00") | 
                      date >= as.POSIXct("2017-10-25 19:00") & 
                      date <= as.POSIXct("2017-11-22 3:00"))
