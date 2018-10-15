@@ -67,24 +67,28 @@ stream.2 <- subset(stream.1, date != as.POSIXct("2017-09-08") &
 ### plot stream temperature and depth with 
 # plot1
 plot1 <-ggplot(data = stream.2)+
-  geom_line(aes(x = date, y = depth, color = "Depth"))+
+  geom_line(aes(x = date, y = depth, color = "Depth"), size = 1)+
   labs(x = "Date", y = "Depth (cm)")+
   theme(legend.position = "bottom", 
-        legend.title = element_blank())+
+        legend.title = element_blank(),
+        text = element_text(size =18))+
   scale_color_manual(values = c("#377eb8"))+
   scale_x_datetime(date_labels = "%m/%d", date_breaks = "10 days")
 # Plot2
 plot2 <-ggplot(data = stream.2)+
   geom_line(aes(x = date, y = temp, color = "Temperature"))+
-  geom_hline(aes(yintercept = 21, color = "Trout Threshold"))+
+  geom_hline(aes(yintercept = 21, linetype = "Trout Threshold"))+
   labs(x = "Date", y = "Temperature (°C)")+
   scale_color_manual(values = c("#4daf4a",
                                 "#e41a1c"))+
   theme(legend.position = "bottom", 
-        legend.title = element_blank())+
+        legend.title = element_blank(),
+        text = element_text(size =18))+
   scale_x_datetime(date_labels = "%m/%d", date_breaks = "10 days")
 grid.newpage()
 grid.draw(rbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "last"))
+
+
 
 ## below text for managing fonts
 # theme(legend.position = "bottom", 
@@ -143,9 +147,10 @@ stream.temp <- (stream.temp) %>%
 ggplot(data = stream.temp)+
   geom_point(aes(x = cumdur, y = temp, shape = "Brittain Creek"))+ 
   geom_smooth(aes(x = cumdur, y = temp, color = "Brittain Creek"), method = loess, se = FALSE)+ 
-  geom_hline(aes(yintercept = 21, color = "Trout Threshold"))+
+  geom_hline(aes(yintercept = 21, linetype = "Trout Threshold"))+
   theme(legend.position = "bottom", 
-        legend.title = element_blank())+
+        legend.title = element_blank(),
+        text = element_text(size = 18))+
   scale_y_continuous(limits = c(0,35), 
                      expand = c(0,0)) +
   labs(x = "Duration (hrs)", y = "Temperature (°C)")
