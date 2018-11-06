@@ -126,8 +126,8 @@ BRC.tempdur2 <- read.csv("./Working/BRC.temp.duration.csv")
 
 ## Plot Brittain Creek Temperature-Durations
 ggplot()+
-  geom_point(data = stream.temp, aes(x = cumdur, y = Temp, shape = "Stream"), size = 1)+
-  geom_point(data = BRC.tempdur2, aes(x = cumdur, y = Temp, shape = "BRC Outflow"), size = 1)+
+  geom_point(data = stream.temp, aes(x = cumdur, y = Temp, shape = "Stream"), size = 2)+
+  geom_point(data = BRC.tempdur2, aes(x = cumdur, y = Temp, shape = "BRC Outflow"), size = 2)+
   geom_hline(aes(yintercept = 21, color = "Trout Threshold"))+
   theme(plot.title = element_text(hjust = 0.5))+
   theme(legend.position = "bottom", 
