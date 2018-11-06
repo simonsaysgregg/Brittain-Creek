@@ -54,6 +54,7 @@ stream$date <- mdy_hm(stream$date, tz = "est")
 stream.1 <- mutate(stream, 
                    temp = (temp - 32)/1.8, 
                    depth = (depth * 30.48))
+# View(stream.1)
 
 ########### subset dataset to remove periods of data collection
 ###### erronious increases in temperature 
@@ -64,10 +65,14 @@ stream.2 <- subset(stream.1, date != as.POSIXct("2017-09-08") &
                      date >= as.POSIXct("2017-10-25 19:00") & 
                      date <= as.POSIXct("2017-11-22 3:00"))
 
+## Left join good data to plot back with original time sereis to leave NAs where no data exist
+stream.2.1 <- left_join(stream.1, stream.2, by = "date")
+# View(stream.2.1)
+
 ### plot stream temperature and depth with 
 # plot1
-plot1 <-ggplot(data = stream.2)+
-  geom_line(aes(x = date, y = depth, color = "Depth"), size = 1)+
+plot1 <-ggplot(data = stream.2.1)+
+  geom_path(aes(x = date, y = depth.y, color = "Depth"), size = 1, na.rm = FALSE)+
   labs(x = "Date", y = "Depth (cm)")+
   theme(legend.position = "bottom", 
         legend.title = element_blank(),
@@ -75,8 +80,8 @@ plot1 <-ggplot(data = stream.2)+
   scale_color_manual(values = c("#377eb8"))+
   scale_x_datetime(date_labels = "%m/%d", date_breaks = "10 days")
 # Plot2
-plot2 <-ggplot(data = stream.2)+
-  geom_line(aes(x = date, y = temp, color = "Temperature"))+
+plot2 <-ggplot(data = stream.2.1)+
+  geom_path(aes(x = date, y = temp.y, color = "Temperature"), na.rm = FALSE)+
   geom_hline(aes(yintercept = 21, linetype = "Trout Threshold"))+
   labs(x = "Date", y = "Temperature (°C)")+
   scale_color_manual(values = c("#4daf4a",
