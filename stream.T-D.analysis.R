@@ -2,6 +2,7 @@
 ### Temperature and Depth data analysis
 ### Monitroing period September 8 - November 22
 
+
 ### Load r packages 
 ### not all packages required
 #Visualizing data
@@ -119,13 +120,19 @@ stream.temp <- (stream.temp) %>%
   mutate(cumdur = cumsum(time))
 ## View(stream.temp)
 
+## read BRC data
+BRC.tempdur2 <- read.csv("./Working/BRC.temp.duration.csv")
+# View(BRC.tempdur2)
+
 ## Plot Brittain Creek Temperature-Durations
 ggplot()+
-  geom_point(data = stream.temp, aes(x = cumdur, y = Temp, shape = "Stream Temperature"))+ 
-  ggtitle("Brittain Creek Temperature-Duration Plot")+
+  geom_point(data = stream.temp, aes(x = cumdur, y = Temp, shape = "Stream"), size = 2)+
+  geom_point(data = BRC.tempdur2, aes(x = cumdur, y = Temp, shape = "BRC Outflow"), size = 2)+
+  geom_hline(aes(yintercept = 21, color = "Trout Threshold"))+
   theme(plot.title = element_text(hjust = 0.5))+
   theme(legend.position = "bottom", 
-        legend.title = element_blank())+
+        legend.title = element_blank(),
+        text = element_text(size = 18))+
   scale_y_continuous(limits = c(5,35), 
                      expand = c(0,0)) +
   labs(x = "Duration (hrs)", y = "Temperature (°C)")
