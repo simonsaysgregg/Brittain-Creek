@@ -11,6 +11,7 @@ require("scales")       #
 require("RColorBrewer") # creates nice color schemes
 require("corrplot")     # A graphical display of a correlation matrix between all combinations of variables
 require("grid")
+require("cowplot")
 ## Statistical analysis
 require("stats")        # Lots of stats stuff
 ## Data management
@@ -112,6 +113,7 @@ stream.2.1 <- left_join(stream.1, stream.2, by = "Date")
 plot1 <-ggplot(data = stream.2.1)+
   geom_path(aes(x = Date, y = depth.y, color = "Depth"), size = 1, na.rm = FALSE)+
   labs(x = "Date", y = "Depth (cm)")+
+  theme_grey()+
   theme(legend.position = "bottom", 
         legend.title = element_blank(),
         text = element_text(size =18))+
@@ -124,15 +126,30 @@ plot2 <-ggplot(data = stream.2.1)+
   labs(x = "Date", y = "Temperature (°C)")+
   scale_color_manual(values = c("#4daf4a",
                                 "#e41a1c"))+
+  theme_grey()+
   theme(legend.position = "bottom", 
         legend.title = element_blank(),
         text = element_text(size =18))+
   scale_x_datetime(date_labels = "%m/%d", date_breaks = "10 days")
-
-
-grid.newpage()
-grid.draw(rbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "last"))
-
+# Plot 3
+plot3 <- ggplot(stream.1)+
+  geom_bar(aes(x = Date, y = Rainfall, color = Rainfall), stat = "identity", size = 1)+
+  labs(y = "Rainfall (mm)", x = "Date")+
+  scale_y_reverse()+
+  theme_grey()+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5),
+        text = element_text(size = 18),
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.text = element_blank())+
+  scale_x_datetime(date_labels = "%m/%d", date_breaks = "10 days")
+gA <- ggplotGrob(plot3)
+gB <- ggplotGrob(plot1)
+gC <- ggplotGrob(plot2)
+grid::grid.newpage()
+plot_grid(gA, gB, gC, rel_heights = c(1.2,2.2,2.2), ncol = 1, align = "v")
 
 
 ## below text for managing fonts
